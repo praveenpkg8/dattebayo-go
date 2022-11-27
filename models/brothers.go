@@ -20,14 +20,16 @@ type Address struct {
 }
 
 type PersonalDetails struct {
-	Id               string  `json:"id,omitempty"`
-	UserId           string  `json:"user_id"`
-	DoB              string  `json:"DoB"`
-	Email            string  `json:"email"`
-	PhoneNumber      string  `json:"phone_number"`
-	AltPhoneNumber   string  `json:"alt_phone_number"`
-	CurrentAddress   Address `json:"current_address"`
-	PermanentAddress Address `json:"permanent_address"`
+	Id                     string  `json:"id,omitempty"`
+	BrotherId              string  `json:"brother_id"`
+	DoB                    string  `json:"DoB"`
+	Email                  string  `json:"email"`
+	PhoneNumber            string  `json:"phone_number"`
+	AltPhoneNumber         string  `json:"alt_phone_number"`
+	AltContactName         string  `json:"alt_contact_name"`
+	AltContactRelationship string  `json:"alt_contact_relationship"`
+	CurrentAddress         Address `json:"current_address"`
+	PermanentAddress       Address `json:"permanent_address"`
 }
 
 type Brothers struct {
@@ -40,12 +42,11 @@ type Brothers struct {
 	ApprovalStatus string `json:"approval_status"`
 }
 
-func AddBrothers(brotherId string, newBrothers Brothers) {
+func AddBrothers(newBrothers Brothers) string {
 	log.Println("Adding brother")
 	var err error
 	var db *sql.DB = database.GetDB()
-
-	id := uuid.New()
+	brotherId := uuid.New().String()
 	stmt, err := db.Prepare("INSERT INTO brothers(id, firstName, lastName, referralCode) values(?, ?, ?, ?)")
 	if err != nil {
 		log.Fatal(err)
@@ -61,16 +62,17 @@ func AddBrothers(brotherId string, newBrothers Brothers) {
 	}
 
 	defer stmt.Close()
-	log.Printf("Added Brother: %v | %v | %v \n", id.String(), newBrothers.FirstName, newBrothers.LastName)
+	log.Printf("Added Brother: %v | %v | %v \n", brotherId, newBrothers.FirstName, newBrothers.LastName)
+	return brotherId
 }
 
-func AddPersonalDetails(brotherId string, brotherPersonalDetails PersonalDetails) {
+func AddPersonalDetails(brotherId string, brotherPersonalDetails PersonalDetails) string {
 	log.Println("Adding Email")
 	var err error
 	var db *sql.DB = database.GetDB()
 
 	id := uuid.New()
-	stmt, err := db.Prepare("INSERT INTO personalDetails(id, userId, email) values(?, ?, ?)")
+	stmt, err := db.Prepare("INSERT INTO personalDetails(id, brotherId, email) values(?, ?, ?)")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -85,4 +87,5 @@ func AddPersonalDetails(brotherId string, brotherPersonalDetails PersonalDetails
 
 	defer stmt.Close()
 	log.Printf("Added PersonalDetails : %v | %v | %v \n", id.String(), brotherId, brotherPersonalDetails.Email)
+	return id.String()
 }
