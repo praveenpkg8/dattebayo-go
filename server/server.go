@@ -22,11 +22,31 @@ func postAlbums(c *gin.Context) {
 	if err := c.ShouldBindBodyWith(&botherPersonalDetails, binding.JSON); err != nil {
 		log.Printf("%+v", err)
 	}
-	controllers.CreateBrothers(newBrothers, botherPersonalDetails)
+	brotherId, brPerDetId := controllers.CreateBrothers(newBrothers, botherPersonalDetails)
+	botherPersonalDetails.Id = brPerDetId
+	botherPersonalDetails.BrotherId = brotherId
 
 	// Add the new album to the slice.
 	c.IndentedJSON(http.StatusCreated, botherPersonalDetails)
 }
+
+
+func updatePersonalContact(c *gin.Context) {
+	var botherPersonalDetails models.PersonalDetails
+
+	if err := c.ShouldBindBodyWith(&botherPersonalDetails, binding.JSON); err != nil {
+		log.Printf("%+v", err)
+	
+	}
+	brotherId := c.Param("brothersId")
+	perDetId := c.Param("perDetId")
+	botherPersonalDetails.Id = perDetId
+	botherPersonalDetails.BrotherId = brotherId
+	controllers.UpdatePersonalContact(perDetId, botherPersonalDetails)
+	c.IndentedJSON(http.StatusCreated, botherPersonalDetails)
+}
+
+
 
 func Init() {
 	r := gin.Default()
@@ -36,6 +56,8 @@ func Init() {
 		})
 	})
 	r.POST("/api/v1/brothers", postAlbums)
+	r.PATCH("/api/v1/brothers/:brothersId/personalDetail/:perDetId/contact", updatePersonalContact)
+
 
 	r.Run() // listen and serve on 0.0.0.0:8080
 }
