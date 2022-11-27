@@ -9,12 +9,14 @@ CREATE TABLE brothers (
 );
 
 CREATE TABLE personalDetails (
-	Id VARCHAR(255),
-	UserId VARCHAR(255),
-	DoB VARCHAR(255),
-	Email VARCHAR(255),
-	PhoneNumber VARCHAR(255),
-	AltPhoneNumber VARCHAR(255), 
-	CurrentAddress VARCHAR(8080), 
-	PermanentAddress VARCHAR(8080)
+	id VARCHAR(255),
+	brotherId VARCHAR(255),
+	dob VARCHAR(255),
+	email VARCHAR(255),
+	phoneNumber VARCHAR(255),
+	altPhoneNumber VARCHAR(255), 
+	altContactName VARCHAR(255), 
+	altContactRelationship VARCHAR(255), 
+	currentAddress VARCHAR(8080), 
+	permanentAddress VARCHAR(8080)
 );
