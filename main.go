@@ -11,4 +11,5 @@ func main() {
 	log.SetFlags(log.LstdFlags | log.Lshortfile)
 	database.Init()
 	server.Init()
+	// scripts.PopulateDB()
 }
